@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#6750a4">
+
+<title>Chess Game Explorer</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&family=Material+Symbols+Rounded" rel="stylesheet">
+
+<style>
+:root {
+    --primary:#6750a4;
+    --on-primary:#fff;
+    --primary-container:#e9ddff;
+    --on-primary-container:#21005d;
+
+    --background:#f7f5fb;
+    --surface:#ffffff;
+    --surface-container:#eee8f7;
+    --surface-container-high:#e8e0ef;
+
+    --text:#1c1b1f;
+    --muted:#625f67;
+    --border:#e5e0e8;
+
+    --radius:24px;
+}
+
+* {
+    box-sizing:border-box;
+}
+
+body {
+    margin:0;
+    background:var(--background);
+    color:var(--text);
+    font-family:Roboto,system-ui,sans-serif;
+    font-size:15px;
+    line-height:1.5;
+}
+
+.material-symbols-rounded {
+    font-family:"Material Symbols Rounded";
+    font-weight:normal;
+    font-style:normal;
+    font-size:24px;
+    display:inline-block;
+    line-height:1;
+    white-space:nowrap;
+    direction:ltr;
+    -webkit-font-feature-settings:"liga";
+    font-feature-settings:"liga";
+    -webkit-font-smoothing:antialiased;
+}
+
+/* Header */
+
+header {
+    position:sticky;
+    top:0;
+    z-index:10;
+    background:var(--surface);
+    box-shadow:0 2px 8px #00000010;
+}
+
+.top {
+    max-width:1250px;
+    margin:auto;
+    padding:12px 16px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.logo {
+    width:48px;
+    height:48px;
+    border-radius:16px;
+    background:var(--primary-container);
+    color:var(--on-primary-container);
+    display:grid;
+    place-items:center;
+    font-size:28px;
+}
+
+.title h1 {
+    margin:0;
+    font-size:20px;
+    font-weight:600;
+}
+
+.title p {
+    margin:0;
+    color:var(--muted);
+    font-size:13px;
+}
+
+.spacer {
+    flex:1;
+}
+
+button {
+    border:0;
+    border-radius:999px;
+    padding:10px 18px;
+    font:inherit;
+    font-weight:600;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    background:var(--primary);
+    color:var(--on-primary);
+    transition:background .2s,transform .15s;
+}
+
+button:hover {
+    transform:scale(1.02);
+}
+
+button.secondary {
+    background:var(--surface-container);
+    color:var(--text);
+}
+
+button:disabled {
+    opacity:.4;
+    cursor:default;
+    transform:none;
+}
+
+/* Main */
+
+main {
+    max-width:1250px;
+    margin:24px auto;
+    padding:0 16px;
+}
+
+.hero {
+    padding:24px;
+    border-radius:28px;
+    background:linear-gradient(
+        135deg,
+        #e9ddff,
+        #f3efff,
+        #dbe4ff
+    );
+    margin-bottom:20px;
+}
+
+.hero h2 {
+    margin:0 0 6px;
+    font-size:26px;
+}
+
+.hero p {
+    margin:0;
+    color:#49454f;
+}
+
+/* Stats */
+
+.stats {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin-bottom:20px;
+}
+
+.stat {
+    background:var(--surface);
+    border-radius:20px;
+    padding:16px;
+    box-shadow:0 2px 8px #00000008;
+}
+
+.stat strong {
+    font-size:25px;
+    display:block;
+}
+
+.stat span {
+    color:var(--muted);
+    font-size:13px;
+}
+
+/* Status */
+
+.status {
+    padding:14px 16px;
+    background:#e6f4ea;
+    color:#146c2e;
+    border-radius:16px;
+    margin-bottom:20px;
+}
+
+.status.error {
+    background:#fce8e6;
+    color:#b3261e;
+}
+
+/* Layout */
+
+.layout {
+    display:grid;
+    grid-template-columns:minmax(260px,340px) minmax(0,1fr);
+    gap:20px;
+    align-items:start;
+}
+
+.card {
+    background:var(--surface);
+    border-radius:24px;
+    padding:20px;
+    box-shadow:0 2px 8px #00000008;
+    border:1px solid var(--border);
+}
+
+.card h3 {
+    margin:0 0 16px;
+    font-size:20px;
+}
+
+/* Search */
+
+.search {
+    width:100%;
+    padding:14px 16px;
+    border:1px solid #79747e;
+    border-radius:16px;
+    font:inherit;
+    background:var(--surface);
+    margin-bottom:14px;
+    outline:none;
+}
+
+.search:focus {
+    border:2px solid var(--primary);
+}
+
+/* Game list */
+
+.game-list {
+    max-height:70vh;
+    overflow:auto;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.game {
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:14px;
+    background:var(--surface);
+    cursor:pointer;
+    text-align:left;
+    color:var(--text);
+    width:100%;
+    display:block;
+}
+
+.game:hover {
+    background:var(--surface-container);
+}
+
+.game.active {
+    background:var(--primary-container);
+    border-color:var(--primary);
+}
+
+.game-id {
+    font-weight:650;
+    overflow-wrap:anywhere;
+}
+
+.game-sub {
+    font-size:12px;
+    color:var(--muted);
+    margin-top:4px;
+}
+
+/* Viewer */
+
+.viewer {
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(230px,300px);
+    gap:20px;
+}
+
+.boardwrap {
+    max-width:620px;
+    width:100%;
+    margin:auto;
+}
+
+.board {
+    display:grid;
+    grid-template-columns:repeat(8,1fr);
+    aspect-ratio:1;
+    border-radius:12px;
+    overflow:hidden;
+    border:2px solid #574c40;
+}
+
+.square {
+    aspect-ratio:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    font-size:clamp(25px,5.5vw,60px);
+    font-family:"Segoe UI Symbol","DejaVu Sans",serif;
+    line-height:1;
+}
+
+.light {
+    background:#f0d9b5;
+}
+
+.dark {
+    background:#b58863;
+}
+
+.piece.white {
+    color:#fffdf4;
+    text-shadow:0 1px 2px #333,0 0 2px #333;
+}
+
+.piece.black {
+    color:#171717;
+    text-shadow:0 0 1px #fff;
+}
+
+.coord {
+    position:absolute;
+    font-size:clamp(8px,1.4vw,12px);
+    left:3px;
+    top:3px;
+    color:#333;
+    opacity:.8;
+}
+
+.coord.file {
+    left:auto;
+    right:3px;
+    top:auto;
+    bottom:2px;
+}
+
+.board-meta {
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin:12px 0;
+}
+
+.pill {
+    background:var(--surface-container);
+    padding:6px 12px;
+    border-radius:999px;
+    font-size:13px;
+}
+
+/* Controls */
+
+.controls {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+    margin:16px 0;
+}
+
+.controls button {
+    padding:10px 14px;
+}
+
+.move-position {
+    font-weight:700;
+    min-width:120px;
+    text-align:center;
+}
+
+/* Move panel */
+
+.move-panel {
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:16px;
+    max-height:65vh;
+    overflow:auto;
+}
+
+.move-panel h4 {
+    margin:0 0 12px;
+    font-size:17px;
+}
+
+.move-list {
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.move-row {
+    display:grid;
+    grid-template-columns:38px 1fr;
+    gap:6px;
+    align-items:center;
+}
+
+.move-row button {
+    border-radius:12px;
+    background:var(--surface-container);
+    color:var(--text);
+    text-align:left;
+    padding:9px 12px;
+    font-weight:500;
+    width:100%;
+}
+
+.move-row button.active {
+    background:var(--primary);
+    color:white;
+}
+
+.move-row .num {
+    color:var(--muted);
+    font-size:12px;
+}
+
+/* Notice */
+
+.notice {
+    background:var(--surface-container);
+    border-radius:16px;
+    padding:14px;
+    color:var(--muted);
+    font-size:13px;
+    margin-top:16px;
+}
+
+/* JSON */
+
+details {
+    margin-top:16px;
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:14px;
+}
+
+summary {
+    cursor:pointer;
+    font-weight:600;
+}
+
+pre {
+    white-space:pre-wrap;
+    overflow-wrap:anywhere;
+    font-size:12px;
+    background:var(--surface-container);
+    padding:14px;
+    border-radius:12px;
+    max-height:400px;
+    overflow:auto;
+}
+
+/* Empty */
+
+.empty {
+    padding:30px;
+    text-align:center;
+    color:var(--muted);
+}
+
+/* Responsive */
+
+@media(max-width:900px) {
+    .layout {
+        grid-template-columns:1fr;
+    }
+
+    .game-list {
+        max-height:300px;
+    }
+
+    .viewer {
+        grid-template-columns:1fr;
+    }
+
+    .move-panel {
+        max-height:350px;
+    }
+
+    .boardwrap {
+        max-width:560px;
+    }
+}
+
+@media(max-width:480px) {
+    main {
+        padding:0 10px;
+    }
+
+    .card {
+        padding:14px;
+    }
+
+    .hero {
+        padding:20px;
+    }
+
+    .stats {
+        gap:8px;
+    }
+
+    .stat {
+        padding:12px;
+    }
+
+    .stat strong {
+        font-size:21px;
+    }
+
+    .title h1 {
+        font-size:18px;
+    }
+
+    .title p {
+        font-size:12px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="top">
+
+        <div class="logo">♟</div>
+
+        <div class="title">
+            <h1>Chess Game Explorer</h1>
+            <p>Recorded Firebase piece updates · move replay</p>
+        </div>
+
+        <div class="spacer"></div>
+
+        <button id="refresh">
+            <span class="material-symbols-rounded">refresh</span>
+            Refresh
+        </button>
+
+    </div>
+</header>
+
+<main>
+
+<section class="hero">
+    <h2>Explore recorded chess games</h2>
+
+    <p>
+        Moves are reconstructed from chronological Firebase
+        piece snapshots. Coordinate notation is used because
+        SAN move history is not stored.
+    </p>
+</section>
+
+<div class="stats">
+
+    <div class="stat">
+        <strong id="gameCount">—</strong>
+        <span>Games</span>
+    </div>
+
+    <div class="stat">
+        <strong id="moveCount">—</strong>
+        <span>Recorded updates</span>
+    </div>
+
+    <div class="stat">
+        <strong id="pieceCount">—</strong>
+        <span>Pieces on current position</span>
+    </div>
+
+</div>
+
+<div id="status" class="status">
+    Loading database…
+</div>
+
+<div class="layout">
+
+    <!-- GAME LIST -->
+
+    <section class="card">
+
+        <h3>Games</h3>
+
+        <input
+            id="search"
+            class="search"
+            type="search"
+            placeholder="Search game ID…"
+        >
+
+        <div id="games" class="game-list"></div>
+
+    </section>
+
+    <!-- GAME VIEWER -->
+
+    <section class="card">
+
+        <h3 id="gameTitle">Select a game</h3>
+
+        <div id="gameView" class="empty">
+            Choose a game from the list.
+        </div>
+
+    </section>
+
+</div>
+
+</main>
+
+<script>
+const DB = "https://chess-50a1c.firebaseio.com/.json";
+
+let root = {};
+let gameEntries = [];
+let selected = null;
+let replay = [];
+let frame = 0;
+
+const $ = id => document.getElementById(id);
+
+const glyph = {
+    king:   {w:"♔",b:"♚"},
+    queen:  {w:"♕",b:"♛"},
+    tower:  {w:"♖",b:"♜"},
+    rook:   {w:"♖",b:"♜"},
+    bishop: {w:"♗",b:"♝"},
+    knight: {w:"♘",b:"♞"},
+    pawn:   {w:"♙",b:"♟"}
+};
+
+const files = "abcdefgh";
+
+/* Escape HTML */
+
+function esc(s) {
+    return String(s).replace(/[&<>"']/g,c=>({
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#39;"
+    }[c]));
+}
+
+/* Status */
+
+function setStatus(text,error=false) {
+    $("status").textContent=text;
+    $("status").className="status"+(error?" error":"");
+}
+
+/* Piece validation */
+
+function isPiece(v) {
+    return v &&
+        typeof v==="object" &&
+        typeof v.id==="string" &&
+        typeof v.type==="string" &&
+        typeof v.color==="string" &&
+        v.position &&
+        Number.isFinite(v.position.x) &&
+        Number.isFinite(v.position.y);
+}
+
+function pieceEntries(raw) {
+    return Object.entries(raw||{})
+        .filter(([,v])=>isPiece(v));
+}
+
+/* Coordinate conversion */
+
+function coord(pos) {
+    return pos &&
+        pos.x>=0 &&
+        pos.x<8 &&
+        pos.y>=0 &&
+        pos.y<8
+        ? files[pos.x]+(8-pos.y)
+        : "??";
+}
+
+/*
+Firebase push keys are chronological.
+The initial state is reconstructed from the first
+snapshot of every piece ID.
+*/
+
+function buildReplay(raw) {
+
+    const entries=pieceEntries(raw)
+        .sort(([a],[b])=>a.localeCompare(b));
+
+    const firstById=new Map();
+    const updates=[];
+
+    for(const [key,p] of entries) {
+
+        if(!firstById.has(p.id)) {
+            firstById.set(p.id,structuredClone(p));
+        } else {
+            updates.push({
+                key,
+                p:structuredClone(p)
+            });
+        }
+    }
+
+    const initial=[...firstById.values()];
+
+    const state=new Map(
+        initial.map(p=>[
+            p.id,
+            structuredClone(p)
+        ])
+    );
+
+    const timeline=[];
+
+    timeline.push({
+        label:"Initial position",
+        move:"Start",
+        state:structuredClone([...state.values()]),
+        key:""
+    });
+
+    let ply=0;
+
+    for(const update of updates) {
+
+        const old=state.get(update.p.id);
+
+        if(!old) continue;
+
+        const oldPosition=coord(old.position);
+        const newPosition=coord(update.p.position);
+
+        const changed=
+            oldPosition!==newPosition ||
+            old.alive!==update.p.alive ||
+            old.type!==update.p.type;
+
+        if(!changed) continue;
+
+        const from=oldPosition;
+        const to=newPosition;
+
+        const capture=
+            update.p.alive===false ||
+            [...state.values()].some(q=>
+                q.id!==update.p.id &&
+                q.alive!==false &&
+                coord(q.position)===to
+            );
+
+        let notation="";
+
+        const pieceLetter={
+            king:"K",
+            queen:"Q",
+            tower:"R",
+            rook:"R",
+            bishop:"B",
+            knight:"N"
+        };
+
+        notation=
+            update.p.type==="pawn"
+            ? ""
+            : pieceLetter[update.p.type]||"";
+
+        notation+=capture
+            ? from+"x"+to
+            : from+"-"+to;
+
+        if(update.p.alive===false) {
+            notation+=" (captured)";
+        }
+
+        state.set(update.p.id,update.p);
+
+        ply++;
+
+        timeline.push({
+            label:`Update ${ply}`,
+            move:notation,
+            color:update.p.color,
+            key:update.key,
+            state:structuredClone([...state.values()])
+        });
+    }
+
+    return timeline;
+}
+
+/* Game list */
+
+function renderGames() {
+
+    const query=$("search").value.toLowerCase();
+
+    const list=$("games");
+
+    list.innerHTML="";
+
+    const filtered=gameEntries.filter(([id])=>
+        id.toLowerCase().includes(query)
+    );
+
+    if(!filtered.length) {
+        list.innerHTML=
+            '<div class="empty">No games match.</div>';
+        return;
+    }
+
+    filtered.forEach(([id,raw])=>{
+
+        const button=document.createElement("button");
+
+        button.className=
+            "game"+(id===selected?" active":"");
+
+        button.innerHTML=`
+            <div class="game-id">${esc(id)}</div>
+            <div class="game-sub">
+                ${pieceEntries(raw).length} piece snapshots
+                · ${buildReplay(raw).length-1} updates
+            </div>
+        `;
+
+        button.onclick=()=>{
+            selected=id;
+            frame=0;
+            renderGames();
+            renderSelected();
+        };
+
+        list.appendChild(button);
+    });
+}
+
+/* Chessboard */
+
+function boardHTML(pieces) {
+
+    const board=Array(64).fill(null);
+
+    pieces.forEach(p=>{
+
+        if(p.alive===false) return;
+
+        const x=p.position?.x;
+        const y=p.position?.y;
+
+        if(
+            Number.isInteger(x) &&
+            Number.isInteger(y) &&
+            x>=0 &&
+            x<8 &&
+            y>=0 &&
+            y<8
+        ) {
+            board[y*8+x]=p;
+        }
+    });
+
+    return board.map((p,i)=>{
+
+        const row=Math.floor(i/8);
+        const col=i%8;
+
+        const cls=
+            (row+col)%2
+            ? "dark"
+            : "light";
+
+        const label=p
+            ? glyph[p.type]?.[p.color]||"●"
+            : "";
+
+        return `
+            <div class="square ${cls}">
+
+                ${col===0
+                    ? `<span class="coord">${8-row}</span>`
+                    : ""
+                }
+
+                ${row===7
+                    ? `<span class="coord file">${files[col]}</span>`
+                    : ""
+                }
+
+                ${p
+                    ? `<span class="piece ${
+                        p.color==="w"?"white":"black"
+                    }">${label}</span>`
+                    : ""
+                }
+
+            </div>
+        `;
+
+    }).join("");
+}
+
+/* Render selected game */
+
+function renderSelected() {
+
+    if(!selected) {
+
+        $("gameTitle").textContent="Select a game";
+
+        $("gameView").innerHTML=
+            '<div class="empty">Choose a game from the list.</div>';
+
+        return;
+    }
+
+    const raw=gameEntries.find(x=>x[0]===selected)?.[1];
+
+    replay=buildReplay(raw);
+
+    frame=Math.min(frame,replay.length-1);
+
+    const current=replay[frame];
+
+    const pieces=current.state.filter(p=>p.alive!==false);
+
+    $("gameTitle").textContent=selected;
+
+    $("pieceCount").textContent=pieces.length;
+
+    $("moveCount").textContent=replay.length-1;
+
+    const moves=replay.slice(1).map((m,i)=>`
+
+        <div class="move-row">
+
+            <span class="num">${i+1}.</span>
+
+            <button
+                class="${frame===i+1?"active":""}"
+                data-frame="${i+1}">
+
+                ${esc(m.move)}
+
+            </button>
+
+        </div>
+
+    `).join("");
+
+    $("gameView").innerHTML=`
+
+        <div class="viewer">
+
+            <div>
+
+                <div class="boardwrap">
+
+                    <div class="board">
+                        ${boardHTML(current.state)}
+                    </div>
+
+                    <div class="board-meta">
+
+                        <span class="pill">
+                            Position ${frame}/${replay.length-1}
+                        </span>
+
+                        <span class="pill">
+                            ${pieces.filter(p=>p.color==="w").length}
+                            White
+                        </span>
+
+                        <span class="pill">
+                            ${pieces.filter(p=>p.color==="b").length}
+                            Black
+                        </span>
+
+                    </div>
+
+                    <div class="controls">
+
+                        <button class="secondary" id="first">
+                            <span class="material-symbols-rounded">
+                                first_page
+                            </span>
+                        </button>
+
+                        <button class="secondary" id="prev">
+                            <span class="material-symbols-rounded">
+                                chevron_left
+                            </span>
+                        </button>
+
+                        <span class="move-position">
+                            ${
+                                frame===0
+                                ? "Initial position"
+                                : replay[frame].move
+                            }
+                        </span>
+
+                        <button class="secondary" id="next">
+                            <span class="material-symbols-rounded">
+                                chevron_right
+                            </span>
+                        </button>
+
+                        <button class="secondary" id="last">
+                            <span class="material-symbols-rounded">
+                                last_page
+                            </span>
+                        </button>
+
+                    </div>
+
+                    <details>
+
+                        <summary>Raw game JSON</summary>
+
+                        <pre>${esc(JSON.stringify(raw,null,2))}</pre>
+
+                    </details>
+
+                </div>
+
+            </div>
+
+            <div class="move-panel">
+
+                <h4>Recorded move updates</h4>
+
+                <div class="move-list">
+
+                    ${moves||'<div class="empty">No recorded updates.</div>'}
+
+                </div>
+
+                <div class="notice">
+
+                    Move order is inferred from Firebase
+                    push-key chronology.
+
+                    This database stores piece snapshots,
+                    not SAN/PGN notation, so moves are shown
+                    in coordinate notation and are not
+                    independently validated as legal chess moves.
+
+                </div>
+
+            </div>
+
+        </div>
+    `;
+
+    /* Controls */
+
+    $("first").onclick=()=>{
+        frame=0;
+        renderSelected();
+    };
+
+    $("prev").onclick=()=>{
+        frame=Math.max(0,frame-1);
+        renderSelected();
+    };
+
+    $("next").onclick=()=>{
+        frame=Math.min(replay.length-1,frame+1);
+        renderSelected();
+    };
+
+    $("last").onclick=()=>{
+        frame=replay.length-1;
+        renderSelected();
+    };
+
+    document.querySelectorAll("[data-frame]")
+        .forEach(button=>{
+
+            button.onclick=()=>{
+                frame=Number(button.dataset.frame);
+                renderSelected();
+            };
+
+        });
+}
+
+/* Load Firebase */
+
+async function load() {
+
+    $("refresh").disabled=true;
+
+    setStatus("Loading Firebase database…");
+
+    try {
+
+        const response=await fetch(DB,{
+            cache:"no-store"
+        });
+
+        if(!response.ok) {
+            throw new Error("HTTP "+response.status);
+        }
+
+        root=await response.json();
+
+        gameEntries=Object.entries(root)
+            .filter(([id,value])=>
+                id.startsWith("game-") &&
+                pieceEntries(value).length>0
+            );
+
+        $("gameCount").textContent=gameEntries.length;
+
+        if(
+            !selected ||
+            !gameEntries.some(([id])=>id===selected)
+        ) {
+            selected=gameEntries.length
+                ? gameEntries[0][0]
+                : null;
+        }
+
+        setStatus(
+            `Connected · ${gameEntries.length} game records loaded`
+        );
+
+        renderGames();
+        renderSelected();
+
+    } catch(error) {
+
+        setStatus(
+            "Unable to connect: "+error.message,
+            true
+        );
+
+        $("games").innerHTML=`
+            <div class="empty">
+                Firebase read failed.
+                Check database access rules.
+            </div>
+        `;
+
+    } finally {
+
+        $("refresh").disabled=false;
+
+    }
+}
+
+/* Events */
+
+$("refresh").onclick=load;
+
+$("search").oninput=renderGames;
+
+load();
+</script>
+
+</body>
+</html>
