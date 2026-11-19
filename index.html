@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#006b5f">
+<title>Games & Creative Tools</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&family=Material+Symbols+Rounded" rel="stylesheet">
+
+<style>
+:root {
+    --primary: #006b5f;
+    --on-primary: #ffffff;
+    --primary-container: #9cf0e2;
+    --on-primary-container: #00201c;
+
+    --surface: #f5f8f7;
+    --surface-container: #e9efed;
+    --surface-container-high: #e0e7e5;
+    --on-surface: #191c1b;
+    --on-surface-variant: #414947;
+    --outline: #707977;
+
+    --radius: 28px;
+    --radius-small: 16px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Roboto", sans-serif;
+    background: var(--surface);
+    color: var(--on-surface);
+}
+
+.material-symbols-rounded {
+    font-family: "Material Symbols Rounded";
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    display: inline-block;
+    line-height: 1;
+    white-space: nowrap;
+    direction: ltr;
+    -webkit-font-feature-settings: "liga";
+    font-feature-settings: "liga";
+    -webkit-font-smoothing: antialiased;
+}
+
+.topbar {
+    height: 72px;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    background: var(--surface);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.brand-icon {
+    width: 42px;
+    height: 42px;
+    background: var(--primary-container);
+    color: var(--on-primary-container);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+main {
+    max-width: 1100px;
+    margin: auto;
+    padding: 32px 24px 64px;
+}
+
+.hero {
+    padding: 48px 36px;
+    border-radius: 32px;
+    background: var(--primary-container);
+    color: var(--on-primary-container);
+    margin-bottom: 36px;
+}
+
+.hero h1 {
+    font-size: clamp(32px, 5vw, 48px);
+    font-weight: 600;
+    margin: 0 0 16px;
+    letter-spacing: -1px;
+}
+
+.hero p {
+    font-size: 18px;
+    line-height: 1.6;
+    max-width: 650px;
+    margin: 0;
+    opacity: .85;
+}
+
+.section-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 0 20px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.game-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 260px;
+    padding: 24px;
+    background: var(--surface-container);
+    border-radius: var(--radius);
+    color: var(--on-surface);
+    transition: transform .2s ease,
+                box-shadow .2s ease,
+                background .2s ease;
+    border: 1px solid transparent;
+}
+
+.game-card:hover {
+    transform: translateY(-4px);
+    background: var(--surface-container-high);
+    box-shadow: 0 6px 18px rgba(0,0,0,.08);
+}
+
+.card-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 22px;
+    background: var(--primary-container);
+    color: var(--on-primary-container);
+}
+
+.card-icon .material-symbols-rounded {
+    font-size: 34px;
+}
+
+.game-card h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0 0 8px;
+}
+
+.game-card p {
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--on-surface-variant);
+    margin: 0;
+}
+
+/* Card actions */
+
+.card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 24px;
+}
+
+.primary-action,
+.secondary-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+    border-radius: 999px;
+    padding: 12px 18px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background .2s, transform .2s;
+}
+
+.primary-action {
+    background: var(--primary);
+    color: var(--on-primary);
+}
+
+.secondary-action {
+    background: var(--surface-container-high);
+    color: var(--on-surface);
+}
+
+.primary-action:hover,
+.secondary-action:hover {
+    transform: scale(1.02);
+    opacity: .9;
+}
+
+.card-actions .material-symbols-rounded {
+    font-size: 20px;
+}
+
+footer {
+    margin-top: 48px;
+    padding: 24px;
+    text-align: center;
+    color: var(--on-surface-variant);
+    font-size: 14px;
+}
+
+@media (max-width: 600px) {
+    .topbar {
+        padding: 0 16px;
+    }
+
+    main {
+        padding: 24px 16px 48px;
+    }
+
+    .hero {
+        padding: 32px 24px;
+        border-radius: 24px;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .game-card {
+        min-height: 240px;
+    }
+
+    .card-actions {
+        flex-direction: column;
+    }
+
+    .primary-action,
+    .secondary-action {
+        width: 100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+    <div class="brand">
+        <div class="brand-icon">
+            <span class="material-symbols-rounded">sports_esports</span>
+        </div>
+
+        Games & Creative Tools
+    </div>
+</header>
+
+<main>
+
+    <section class="hero">
+        <h1>Play. Create. Explore.</h1>
+
+        <p>
+            A collection of games and creative tools.
+            Choose something to play or start creating.
+        </p>
+    </section>
+
+    <h2 class="section-title">Explore</h2>
+
+    <div class="grid">
+
+        <!-- CHESS CARD -->
+
+        <div class="game-card">
+
+            <div class="card-icon">
+                <span class="material-symbols-rounded">chess</span>
+            </div>
+
+            <h2>Chess</h2>
+
+            <p>
+                Play chess or explore recorded chess games
+                and replay their moves.
+            </p>
+
+            <div class="card-actions">
+
+                <a class="primary-action"
+                   href="https://chess.monsoonmalabar.com"
+                   target="_blank"
+                   rel="noopener noreferrer">
+
+                    <span class="material-symbols-rounded">
+                        play_arrow
+                    </span>
+
+                    Play Chess
+                </a>
+
+                <a class="secondary-action"
+                   href="https://chess.monsoonmalabar.com/explorer/"
+                   target="_blank"
+                   rel="noopener noreferrer">
+
+                    <span class="material-symbols-rounded">
+                        history
+                    </span>
+
+                    Game Explorer
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- PAINT 1 -->
+
+        <a class="game-card"
+           href="https://social-utilities.monsoonmalabar.com/Paint1/"
+           target="_blank"
+           rel="noopener noreferrer">
+
+            <div class="card-icon">
+                <span class="material-symbols-rounded">palette</span>
+            </div>
+
+            <h2>Paint Studio</h2>
+
+            <p>
+                Draw, sketch and express your creativity.
+            </p>
+
+            <div class="card-actions">
+                <div class="primary-action">
+                    <span class="material-symbols-rounded">
+                        brush
+                    </span>
+                    Open Paint
+                </div>
+            </div>
+
+        </a>
+
+
+        <!-- PAINT 2 -->
+
+        <a class="game-card"
+           href="https://social-utilities.monsoonmalabar.com/Paint2/"
+           target="_blank"
+           rel="noopener noreferrer">
+
+            <div class="card-icon">
+                <span class="material-symbols-rounded">brush</span>
+            </div>
+
+            <h2>Creative Paint</h2>
+
+            <p>
+                Explore another painting and drawing experience.
+            </p>
+
+            <div class="card-actions">
+                <div class="primary-action">
+                    <span class="material-symbols-rounded">
+                        draw
+                    </span>
+                    Start Creating
+                </div>
+            </div>
+
+        </a>
+
+
+        <!-- TETRIS -->
+
+        <a class="game-card"
+           href="https://social-utilities.monsoonmalabar.com/Tetris/?lan=en"
+           target="_blank"
+           rel="noopener noreferrer">
+
+            <div class="card-icon">
+                <span class="material-symbols-rounded">extension</span>
+            </div>
+
+            <h2>Tetris</h2>
+
+            <p>
+                Stack blocks, clear lines and beat your high score.
+            </p>
+
+            <div class="card-actions">
+                <div class="primary-action">
+                    <span class="material-symbols-rounded">
+                        play_arrow
+                    </span>
+                    Play Tetris
+                </div>
+            </div>
+
+        </a>
+
+    </div>
+
+</main>
+
+<footer>
+    Games & Creative Tools
+</footer>
+
+</body>
+</html>
